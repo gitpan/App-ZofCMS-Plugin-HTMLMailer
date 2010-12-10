@@ -1,0 +1,26 @@
+---
+abstract: 'ZofCMS plugin for sending HTML email'
+author:
+  - 'Zoffix Znet <zoffix@zoffix.com>'
+build_requires:
+  Test::More: 0
+configure_requires:
+  Module::Build: 0.36
+generated_by: 'Module::Build version 0.3607'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: App-ZofCMS-Plugin-HTMLMailer
+provides:
+  App::ZofCMS::Plugin::HTMLMailer:
+    file: lib/App/ZofCMS/Plugin/HTMLMailer.pm
+    version: 0.0101
+requires:
+  App::ZofCMS::Plugin::Base: 0.0105
+  File::Spec::Functions: 3.3
+  HTML::Template: 2.9
+  MIME::Lite: 3.027
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.0101
