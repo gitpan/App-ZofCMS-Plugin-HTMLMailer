@@ -15,7 +15,7 @@ name: App-ZofCMS-Plugin-HTMLMailer
 provides:
   App::ZofCMS::Plugin::HTMLMailer:
     file: lib/App/ZofCMS/Plugin/HTMLMailer.pm
-    version: 0.0101
+    version: 0.0102
 requires:
   App::ZofCMS::Plugin::Base: 0.0105
   File::Spec::Functions: 3.3
@@ -23,4 +23,4 @@ requires:
   MIME::Lite: 3.027
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.0101
+version: 0.0102

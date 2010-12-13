@@ -7,14 +7,14 @@ use MIME::Lite;
 use HTML::Template;
 use File::Spec::Functions qw/catfile/;
 
-our $VERSION = '0.0101';
+our $VERSION = '0.0102';
 
 sub _key { 'plug_htmlmailer' }
 
 sub _defaults {
     return (
-        to                      => [ qw/foo@bar.com ber@bar.com/ ],
-        template                => 'mail_templates/new-forum-post.tmpl',
+        #to                      => [ qw/foo@bar.com ber@bar.com/ ],
+        #template                => 'mail_templates/new-forum-post.tmpl',
 
         subject                 => '',
         template_dir            => undef,

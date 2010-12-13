@@ -1,5 +1,9 @@
 Revision history for App-ZofCMS-Plugin-HTMLMailer
 
+0.0102  December 13, 2010
+        Fixed a really stupid and frustrating bug
+        (mandatory defaults were left with default values I used for testing)
+
 0.0101  December 10, 2010
         First version, released on an unsuspecting world.
 
