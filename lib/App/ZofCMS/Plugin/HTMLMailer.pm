@@ -7,7 +7,7 @@ use MIME::Lite;
 use HTML::Template;
 use File::Spec::Functions qw/catfile/;
 
-our $VERSION = '0.0102';
+our $VERSION = '0.0103';
 
 sub _key { 'plug_htmlmailer' }
 
@@ -21,6 +21,8 @@ sub _defaults {
         precode                 => undef,
         mime_lite_params        => undef,
         from                    => undef,
+        cc                      => undef,
+        bcc                     => undef,
         template_params         => undef,
         html_template_object    => undef,
     );
@@ -29,14 +31,15 @@ sub _defaults {
 sub _do {
     my ( $self, $conf, $t, $q, $config ) = @_;
 
-    if ( ref $conf->{to} eq 'CODE' ) {
-        $conf->{to} = $conf->{to}->( $t, $q, $config );
-    }
+    for ( qw/to  bcc  cc/ ) {
+        $conf->{$_} = $conf->{$_}->( $t, $q, $config )
+            if ref $conf->{$_} eq 'CODE';
 
-    $conf->{to} = [ $conf->{to} ]
-        if ref $conf->{to} ne 'ARRAY'
-            and defined $conf->{to}
-            and length $conf->{to};
+        $conf->{$_} = [ $conf->{$_} ]
+            if ref $conf->{$_} ne 'ARRAY'
+                and defined $conf->{$_}
+                and length $conf->{$_};
+    }
 
     return
         unless @{ $conf->{to} || [] }
@@ -70,6 +73,8 @@ sub _do {
         Subject => $conf->{subject},
         ( defined $conf->{from} ? ( From => $conf->{from} ) : (), ),
         To      => ( join ',', @{ $conf->{to} } ),
+        ( ( defined $conf->{bcc} ) ? ( Bcc => ( join ',', @{ $conf->{bcc} } ), ) : () ),
+        ( ( defined $conf->{cc} ) ? ( cc => ( join ',', @{ $conf->{cc} } ), ) : () ),
         Type    => 'text/html',
         Data    => $temp->output,
     );
