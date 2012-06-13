@@ -1,5 +1,9 @@
 Revision history for App-ZofCMS-Plugin-HTMLMailer
 
+0.0104  June 13, 2012
+        Added support for file attachments
+        Fixed docs to include missing BCC and CC fields
+
 0.0103  May 18, 2012
         Added BCC and CC fields
 

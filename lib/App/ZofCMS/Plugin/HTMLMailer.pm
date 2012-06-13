@@ -7,7 +7,7 @@ use MIME::Lite;
 use HTML::Template;
 use File::Spec::Functions qw/catfile/;
 
-our $VERSION = '0.0103';
+our $VERSION = '0.0104';
 
 sub _key { 'plug_htmlmailer' }
 
@@ -31,7 +31,7 @@ sub _defaults {
 sub _do {
     my ( $self, $conf, $t, $q, $config ) = @_;
 
-    for ( qw/to  bcc  cc/ ) {
+    for ( qw/to  bcc  cc / ) {
         $conf->{$_} = $conf->{$_}->( $t, $q, $config )
             if ref $conf->{$_} eq 'CODE';
 
@@ -41,6 +41,13 @@ sub _do {
                 and length $conf->{$_};
     }
 
+    $conf->{attach} = $conf->{attach}->( $t, $q, $config )
+            if ref $conf->{attach} eq 'CODE';
+
+    $conf->{attach} = [ $conf->{attach} ]
+        if $conf->{attach}
+            and ref $conf->{attach}[0] ne 'ARRAY';
+    
     return
         unless @{ $conf->{to} || [] }
             and (
@@ -78,6 +85,10 @@ sub _do {
         Type    => 'text/html',
         Data    => $temp->output,
     );
+    
+    for ( @{ $conf->{attach} || [] } ) {
+        $msg->attach( @$_ );
+    }
 
     MIME::Lite->send( @{ $conf->{mime_lite_params} } )
         if $conf->{mime_lite_params};
@@ -109,6 +120,8 @@ App::ZofCMS::Plugin::HTMLMailer - ZofCMS plugin for sending HTML email
         ],
         subject         => 'Test Subject',
         from            => 'Zoffix Znet <any.mail@fake.com>',
+        cc              => 'foo@bar.com',
+        bcc             => [ 'agent42@fbi.com', 'foo@bar2.com' ],
         template_dir    => 'mail-templates',
         precode         => sub {
             my ( $t, $q, $config, $plug_conf ) = @_;
@@ -123,6 +136,12 @@ App::ZofCMS::Plugin::HTMLMailer - ZofCMS plugin for sending HTML email
             filename            => 'mail-templates/email-template.tmpl',
             die_on_bad_params   => 0,
         ),
+        attach => [
+            Type     => 'image/gif',
+            Path     => 'aaa000123.gif',
+            Filename => 'logo.gif',
+            Disposition => 'attachment'
+        ],
     },
 
 =head1 DESCRIPTION
@@ -156,6 +175,8 @@ plugins.
         ],
         subject         => 'Test Subject',
         from            => 'Zoffix Znet <any.mail@fake.com>',
+        cc              => 'foo@bar.com',
+        bcc             => [ 'agent42@fbi.com', 'foo@bar2.com' ],
         template_dir    => 'mail-templates',
         precode         => sub {
             my ( $t, $q, $config, $plug_conf ) = @_;
@@ -208,6 +229,61 @@ hashref, C<$q> is the query parameter hashref and C<$config> is the
 L<App::ZofCMS::Config> object. B<Default:> if the C<to> key is not defined
 (or the subref to which it's set returns undef) then the plugin will stop
 further processing.
+
+=head3 C<cc>
+
+    plug_htmlmailer => {
+        cc => 'foo@bar.com',
+    ...
+
+    plug_htmlmailer => {
+        cc => [ 'foo@bar.com', 'ber@bar.com', ],
+    ...
+
+    plug_htmlmailer => {
+        cc => sub {
+            my ( $t, $q, $config ) = @_;
+            return [ 'foo@bar.com', 'ber@bar.com', ];
+        }
+    ...
+
+B<Optional>. Specifies "Cc" (carbon copy) email address(es) to which to send the email.
+Takes a scalar, an arrayref or a subref as a value. If a scalar is
+specified, plugin will create a single-item arrayref with it; if an
+arrayref is specified, each of its items will be interpreted as an
+email address to which to send email. If a subref is specified, its return
+value will be assigned to the C<cc> key and its C<@_> array will contain:
+C<$t>, C<$q>, C<$config> (in that order) where C<$t> is ZofCMS Template
+hashref, C<$q> is the query parameter hashref and C<$config> is the
+L<App::ZofCMS::Config> object. B<Default:> not specified
+
+=head3 C<bcc>
+
+    plug_htmlmailer => {
+        bcc => 'foo@bar.com',
+    ...
+
+    plug_htmlmailer => {
+        bcc => [ 'foo@bar.com', 'ber@bar.com', ],
+    ...
+
+    plug_htmlmailer => {
+        bcc => sub {
+            my ( $t, $q, $config ) = @_;
+            return [ 'foo@bar.com', 'ber@bar.com', ];
+        }
+    ...
+
+B<Optional>. Specifies "Bcc" (blind carbon copy) email address(es) 
+to which to send the email.
+Takes a scalar, an arrayref or a subref as a value. If a scalar is
+specified, plugin will create a single-item arrayref with it; if an
+arrayref is specified, each of its items will be interpreted as an
+email address to which to send email. If a subref is specified, its return
+value will be assigned to the C<bcc> key and its C<@_> array will contain:
+C<$t>, C<$q>, C<$config> (in that order) where C<$t> is ZofCMS Template
+hashref, C<$q> is the query parameter hashref and C<$config> is the
+L<App::ZofCMS::Config> object. B<Default:> not specified
 
 =head3 C<template>
 
@@ -338,6 +414,53 @@ the default L<HTML::Template> object (used when C<html_template_object>
 is B<not> specified) has C<die_on_bad_params> argument set to a false
 value; using C<html_template_object> you can change that.
 B<By default> is not specified.
+
+=head3 C<attach>
+
+    plug_htmlmailer => {
+        attach => [
+            Type     => 'image/gif',
+            Path     => 'aaa000123.gif',
+            Filename => 'logo.gif',
+            Disposition => 'attachment'
+        ],
+    ...
+
+    plug_htmlmailer => {
+        attach => [ 
+            [
+                Type     => 'image/gif',
+                Path     => 'aaa000123.gif',
+                Filename => 'logo1.gif',
+                Disposition => 'attachment'
+            ],
+            [
+                Type     => 'TEXT',
+                Data     => "Here's the GIF file you wanted"
+            ],
+        ],
+    ...
+
+    plug_htmlmailer => {
+        attach => sub {
+            my ( $t, $q, $config ) = @_;
+            return [
+                Type     => 'TEXT',
+                Data     => "Here's the GIF file you wanted"
+            ];
+        }
+    ...
+
+B<Optional>. Provides access to the C<attach> method of L<MIME::Lite>, e.g.
+gives you an ability to attach files to your emails.
+Takes an arrayref, an arrayref of arrayrefs, or a subref as a value. If an arrayref is
+specified, plugin will create a single-item arrayref with it (so it'll be nested); if an
+arrayref of arrayrefs is specified, each of its arrayrefs will be interpreted as a
+list of arguments to pass to C<attach> method. If a subref is specified, its return
+value will be assigned to the C<attach> key and its C<@_> array will contain:
+C<$t>, C<$q>, C<$config> (in that order) where C<$t> is ZofCMS Template
+hashref, C<$q> is the query parameter hashref and C<$config> is the
+L<App::ZofCMS::Config> object. B<Default:> not specified
 
 =head1 OUTPUT
 
