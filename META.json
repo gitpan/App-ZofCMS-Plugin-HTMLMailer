@@ -4,7 +4,7 @@
       "Zoffix Znet <zoffix@zoffix.com>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4, CPAN::Meta::Converter version 2.112150",
+   "generated_by" : "Module::Build version 0.4007, CPAN::Meta::Converter version 2.132830",
    "license" : [
       "perl_5"
    ],
@@ -16,12 +16,12 @@
    "prereqs" : {
       "build" : {
          "requires" : {
-            "Test::More" : 0
+            "Test::More" : "0"
          }
       },
       "configure" : {
          "requires" : {
-            "Module::Build" : "0.4"
+            "Module::Build" : "0"
          }
       },
       "runtime" : {
@@ -29,14 +29,15 @@
             "App::ZofCMS::Plugin::Base" : "0.0105",
             "File::Spec::Functions" : "3.3",
             "HTML::Template" : "2.9",
-            "MIME::Lite" : "3.027"
+            "MIME::Lite" : "3.027",
+            "perl" : "5.006"
          }
       }
    },
    "provides" : {
       "App::ZofCMS::Plugin::HTMLMailer" : {
          "file" : "lib/App/ZofCMS/Plugin/HTMLMailer.pm",
-         "version" : "0.0104"
+         "version" : "0.0105"
       }
    },
    "release_status" : "stable",
@@ -45,5 +46,5 @@
          "http://dev.perl.org/licenses/"
       ]
    },
-   "version" : "0.0104"
+   "version" : "0.0105"
 }

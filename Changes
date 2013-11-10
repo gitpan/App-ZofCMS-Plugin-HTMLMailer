@@ -1,16 +1,20 @@
 Revision history for App-ZofCMS-Plugin-HTMLMailer
 
-0.0104  June 13, 2012
-        Added support for file attachments
-        Fixed docs to include missing BCC and CC fields
+0.0105  2013-11-09
+        - Minor fixes to comply with specs and Kwalitee game
 
-0.0103  May 18, 2012
-        Added BCC and CC fields
+0.0104  2012-06-13
+        - Added support for file attachments
+        - Fixed docs to include missing BCC and CC fields
 
-0.0102  December 13, 2010
-        Fixed a really stupid and frustrating bug
-        (mandatory defaults were left with default values I used for testing)
+0.0103  2011-05-18
+        - Added BCC and CC fields
 
-0.0101  December 10, 2010
-        First version, released on an unsuspecting world.
+0.0102  2010-12-13
+        - Fixed a really stupid and frustrating bug
+          (mandatory defaults were left with default values
+          I used for testing)
+
+0.0101  2010-12-10
+        - First version, released on an unsuspecting world.
 

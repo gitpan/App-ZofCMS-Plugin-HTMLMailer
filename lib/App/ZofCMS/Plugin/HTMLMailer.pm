@@ -5,9 +5,9 @@ use strict;
 use base 'App::ZofCMS::Plugin::Base';
 use MIME::Lite;
 use HTML::Template;
-use File::Spec::Functions qw/catfile/;
+use File::Spec::Functions (qw/catfile/);
 
-our $VERSION = '0.0104';
+our $VERSION = '0.0105';
 
 sub _key { 'plug_htmlmailer' }
 
@@ -98,6 +98,8 @@ sub _do {
 
 1;
 __END__
+
+=encoding utf8
 
 =head1 NAME
 
