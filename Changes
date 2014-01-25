@@ -1,5 +1,9 @@
 Revision history for App-ZofCMS-Plugin-HTMLMailer
 
+1.001001  2014-01-25
+        - Coverted to dzil
+        - Fixed RT#87064 (bug in the case when `template_dir` isn't set)
+
 0.0105  2013-11-09
         - Minor fixes to comply with specs and Kwalitee game
 

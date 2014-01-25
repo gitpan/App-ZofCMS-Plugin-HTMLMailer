@@ -7,7 +7,7 @@ use MIME::Lite;
 use HTML::Template;
 use File::Spec::Functions (qw/catfile/);
 
-our $VERSION = '0.0105';
+our $VERSION = '1.001001';
 
 sub _key { 'plug_htmlmailer' }
 
@@ -65,7 +65,7 @@ sub _do {
             ( defined $conf->{template_dir}
                 and length $conf->{template_dir}
             ) ? catfile( $conf->{template_dir}, $conf->{template} )
-            : $conf->{template_dir},
+            : $conf->{template},
         ),
         die_on_bad_params => 0,
     );
